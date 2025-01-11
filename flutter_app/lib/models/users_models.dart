@@ -70,6 +70,8 @@ class UserModel {
       'profileCompleted': profileCompleted,
       'createdAt': createdAt,
       'profileImageUrl': profileImageUrl,
+      'additionalData': additionalData,
+      'phoneNumber': phoneNumber,
     };
   }
 

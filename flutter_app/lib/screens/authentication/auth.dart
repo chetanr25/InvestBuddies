@@ -1,22 +1,37 @@
 // ignore_for_file: invalid_use_of_protected_member
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_app/home_screen.dart';
+import 'package:flutter_app/providers/users_providers.dart';
 import 'package:flutter_app/screens/authentication/registeration.dart';
 import 'package:flutter_app/utils/snackbar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/models/users_models.dart';
-import 'package:flutter_app/providers/user_providers.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class Auth extends ConsumerStatefulWidget {
+  const Auth({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _LoginScreenState createState() => _LoginScreenState();
+  _AuthState createState() => _AuthState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _AuthState extends ConsumerState<Auth> {
+  @override
+  void initState() {
+    super.initState();
+    final user = ref.read(userProvider);
+    if (user != null) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+        (Route<dynamic> route) => false,
+      );
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -31,15 +46,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       });
 
       try {
-        String randomId = DateTime.now().millisecondsSinceEpoch.toString();
         // ignore: invalid_use_of_visible_for_testing_member
-        ref.read(userProvider.notifier).state = UserModel(
-          userId: randomId,
-          email: _emailController.text,
-          profileCompleted: false,
-        );
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const RegistrationScreen()));
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(_emailController.text)
+            .get()
+            .then((docSnapshot) {
+          // if (docSnapshot.exists) {
+          //   ref.read(userProvider.notifier).state = UserModel(
+          //     email: _emailController.text,
+          //     profileCompleted: false,
+          //   );
+          // }
+          if (docSnapshot.exists) {
+            // Map<String, dynamic> data =
+            //     docSnapshot.data() as Map<String, dynamic>;
+            ref.read(userProvider.notifier).state =
+                UserModel.fromFirestore(docSnapshot);
+            showSnackBar(context, 'Login successful');
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+              (Route<dynamic> route) => false,
+            );
+          } else {
+            ref.read(userProvider.notifier).state = UserModel(
+              email: _emailController.text,
+              profileCompleted: false,
+            );
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const RegistrationScreen()));
+          }
+        });
       } on FirebaseAuthException catch (e) {
         _showErrorDialog(e.message ?? 'Login failed');
       } finally {
@@ -84,7 +122,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Text(
-                    'SME Investment Platform',
+                    'Invest buddies',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 28,
@@ -201,10 +239,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  // @override
-  // void dispose() {
-  //   _emailController.dispose();
-  //   _passwordController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 }

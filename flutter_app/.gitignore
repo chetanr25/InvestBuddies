@@ -62,5 +62,5 @@ firestore.indexes.json
 firestore.rules
 .env
 .firebase/
-
+ios/Podfile.lock
 .DS_Store
