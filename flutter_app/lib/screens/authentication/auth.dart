@@ -1,9 +1,10 @@
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_app/home_screen.dart';
+// import 'package:flutter_app/home_screen.dart';
 import 'package:flutter_app/providers/users_providers.dart';
 import 'package:flutter_app/screens/authentication/registeration.dart';
+import 'package:flutter_app/screens/home_screen.dart';
 import 'package:flutter_app/utils/snackbar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,10 +25,9 @@ class _AuthState extends ConsumerState<Auth> {
     super.initState();
     final user = ref.read(userProvider);
     if (user != null) {
-      Navigator.pushAndRemoveUntil(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
-        (Route<dynamic> route) => false,
       );
     }
   }
