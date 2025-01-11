@@ -79,4 +79,10 @@ class UserNotifier extends StateNotifier<UserModel> {
       throw e;
     }
   }
+
+  String? get username => state.displayName;
+  String? get userType => state.role;
+  bool get isAuthenticated => state.userId != '';
+  bool get isInvestor => state.role == 'investor';
+  bool get isBusiness => state.role == 'business';
 }
