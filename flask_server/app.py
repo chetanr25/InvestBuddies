@@ -27,9 +27,9 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 
-def generate_que(que_history):
+def generate_que():
 
-
+    global que_history
     profile= request.json.get("profile")
     # Expanded payload with multiple prompts
     payload = {
@@ -40,7 +40,7 @@ def generate_que(que_history):
             },
             {
                 "role": "user",
-                "content": f"Based on the user's profile and the following question history, generate 1 unique multiple-choice question related to finance that helps the user improve their financial knowledge. The question must not repeat or closely resemble any question in the history. Return the result in JSON format with keys as question, options (as a list), correct option letter, and correct answer.\n\n Question history: {question_history}" ,
+                "content": f"Based on the user's profile and the following question history, generate 1 unique multiple-choice question related to finance that helps the user improve their financial knowledge. The question must not repeat or closely resemble any question in the history. Return the result in JSON format with keys as question, options (as a list), correct option letter, and correct answer.\n\n Question history: {que_history}" ,
             },
             
         ]
@@ -50,12 +50,19 @@ def generate_que(que_history):
     chat_answer = chat_response["answer"]
     que_history.append(chat_answer)
     k=convert_to_json(profile,chat_answer)
+    print(k)
     generate_info(k)
+    print("Failed")
+    print(k)
     return k
 
 def convert_to_json(profile,string):
+    print("hello")
     try:
+        print(string)
         k=json.loads(string)
+        print(k)
+        return k
     except:
         generate_que(profile)
         
@@ -268,7 +275,7 @@ def fin_bot():
 
 
 
-    
+app.run(port=6000, debug=True)
 # if __name__ == '__main__':
 
 #     js={'question': 'Considering your long-term goal of retirement planning and your interest in retirement accounts, which of the following options would be most beneficial for you?',
