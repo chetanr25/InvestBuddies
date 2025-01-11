@@ -240,22 +240,45 @@ def get_url():
     print(file_url)
     return file_url
 
+@app.route('/fin_bot', methods=['POST'])
+
+def fin_bot():
+    prompt= request.json.get("prompt")
+    payload={
+        "messages": [
+            {
+                "role": "system",
+                "content": "You are an expert financial advisor providing accurate and personalized financial guidance. Your capabilities include: 1. Budget Planning: Help users track income, expenses, and savings effectively. 2. Investment Advice: Recommend suitable investment opportunities based on financial goals and risk tolerance. 3. Retirement Planning: Assist in calculating savings needed for retirement and suggest strategies. 4. Tax Optimization: Provide tips to reduce tax liability and maximize tax-efficient investments. 5. Debt Management: Create strategies to manage and pay off debts. 6. Goal-Oriented Planning: Help users achieve specific financial milestones, such as buying a house or saving for education. 7. Market Insights: Offer real-time updates and analysis of market trends. 8. Financial Education: Provide information to educate users about any finance-related topic. Please provide concise, actionable, and reliable advice to help users make informed financial decisions."
+
+            },
+            {
+                "role": "user",
+                "content": prompt
+            },
+            
+        ]
+    }
+    chat_response = ModelLake().chat_complete(payload)
+
+        # Extract and print the response
+    chat_answer = chat_response["answer"]
+    return chat_answer
 
 
 
 
 
     
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    js={'question': 'Considering your long-term goal of retirement planning and your interest in retirement accounts, which of the following options would be most beneficial for you?',
-     'options': ['A. Investing all your savings in a high-risk, high-return retirement account',
-      'B. Ignoring retirement accounts and investing only in stocks',
-      'C. Diversifying your retirement savings between a 401(k) and an Individual Retirement Account (IRA)',
-      'D. Avoiding retirement accounts due to their long-term commitment'],
-     'correct_option_letter': 'C',
-     'correct_answer': 'Diversifying your retirement savings between a 401(k) and an Individual Retirement Account (IRA)'}
-    # generate_info(js)
-    upload_document()
-    ans=chat("What is a 401(k) retirement account?")
-    print(ans)
+#     js={'question': 'Considering your long-term goal of retirement planning and your interest in retirement accounts, which of the following options would be most beneficial for you?',
+#      'options': ['A. Investing all your savings in a high-risk, high-return retirement account',
+#       'B. Ignoring retirement accounts and investing only in stocks',
+#       'C. Diversifying your retirement savings between a 401(k) and an Individual Retirement Account (IRA)',
+#       'D. Avoiding retirement accounts due to their long-term commitment'],
+#      'correct_option_letter': 'C',
+#      'correct_answer': 'Diversifying your retirement savings between a 401(k) and an Individual Retirement Account (IRA)'}
+#     # generate_info(js)
+#     upload_document()
+#     ans=chat("What is a 401(k) retirement account?")
+#     print(ans)
