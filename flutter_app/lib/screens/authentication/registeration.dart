@@ -26,7 +26,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
 
   bool _isLoading = false;
 
-  String _selectedUserType = 'sme';
+  String _selectedUserType = 'business';
   final Set<String> _selectedIndustries = {};
 
   Future<void> _register() async {
@@ -129,12 +129,12 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       ),
                       SizedBox(width: 10),
                       ChoiceChip(
-                        label: Text('SME'),
+                        label: Text('Business'),
                         selectedColor: Colors.green,
-                        selected: _selectedUserType == 'sme',
+                        selected: _selectedUserType == 'business',
                         onSelected: (bool selected) {
                           setState(() {
-                            _selectedUserType = 'sme';
+                            _selectedUserType = 'business';
                           });
                         },
                       ),
