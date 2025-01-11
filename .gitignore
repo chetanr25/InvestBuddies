@@ -68,3 +68,4 @@ node_modules/
 # dataconnect generated files
 .dataconnect
 flask_server/env/
+flask_server/google-services.json

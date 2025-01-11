@@ -7,6 +7,8 @@ from groclake.vectorlake import VectorLake
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
+import firebase_admin
+from firebase_admin import credentials, storage
 
 load_dotenv()
 GROCLAKE_API_KEY=os.getenv('GROCLAKE_API_KEY')
