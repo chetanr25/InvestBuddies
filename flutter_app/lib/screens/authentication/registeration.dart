@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
+import 'package:flutter_app/consts.dart';
 import 'package:flutter_app/core/constants.dart';
 import 'package:flutter_app/home_screen.dart';
 import 'package:flutter_app/models/users_models.dart';
