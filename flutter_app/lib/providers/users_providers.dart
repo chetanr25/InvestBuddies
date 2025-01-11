@@ -47,4 +47,36 @@ class UserNotifier extends StateNotifier<UserModel> {
       print('Error loading user data: $e');
     }
   }
+
+  Future<void> updateUserProfile({
+    String? username,
+    String? userType,
+    String? profileImageUrl,
+    String? phoneNumber,
+    Map<String, dynamic>? additionalData,
+  }) async {
+    try {
+      final uid = state.userId;
+      if (uid == null) return;
+
+      final updates = {
+        if (username != null) 'username': username,
+        if (userType != null) 'userType': userType,
+        if (profileImageUrl != null) 'profileImageUrl': profileImageUrl,
+        if (phoneNumber != null) 'phoneNumber': phoneNumber,
+        if (additionalData != null) 'additionalData': additionalData,
+      };
+
+      await _firestore.collection('users').doc(uid).update(updates);
+
+      state = state.copyWith(
+        displayName: username ?? state.displayName,
+        role: userType ?? state.role,
+        additionalData: additionalData ?? state.additionalData,
+      );
+    } catch (e) {
+      print('Error updating user profile: $e');
+      throw e;
+    }
+  }
 }
