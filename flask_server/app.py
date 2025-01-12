@@ -275,8 +275,8 @@ def fin_bot():
 
 
 
-app.run()
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    app.run()
 
 #     js={'question': 'Considering your long-term goal of retirement planning and your interest in retirement accounts, which of the following options would be most beneficial for you?',
 #      'options': ['A. Investing all your savings in a high-risk, high-return retirement account',
