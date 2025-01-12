@@ -86,20 +86,24 @@ class BuddyInvestmentService {
         'buddies': updatedBuddies,
       };
 
-      // If all buddies have accepted, mark the investment as complete
       if (allAccepted) {
         updates['isComplete'] = [true];
 
         // Update the business's available lots
         final businessRef =
             _firestore.collection('business').doc(roomData['businessId']);
-
         final businessDoc = await transaction.get(businessRef);
         final businessData = businessDoc.data() ?? {};
 
-        transaction.update(businessRef, {
-          'numberOfLots': businessData['numberOfLots'] - 1,
-        });
+        // Add null check and default value
+        final currentLots = businessData['numberOfLots'] ?? 0;
+        if (currentLots > 0) {
+          transaction.update(businessRef, {
+            'numberOfLots': currentLots - 1,
+          });
+        } else {
+          throw Exception('No lots available');
+        }
 
         // Create investment records for all participants
         final batch = _firestore.batch();
