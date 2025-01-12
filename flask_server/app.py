@@ -36,7 +36,7 @@ cloudinary.config(
     secure=True
 )
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 @app.route('/generate_que', methods=['POST'])  # Changed route name to be more RESTful
 def generate_que():
@@ -292,8 +292,8 @@ def fin_bot():
 
 
 
-if _name_ == '_main_':
-    app.run()
+app.run(port=5000, debug=True)
+# if _name_ == '_main_':
 
 #     js={'question': 'Considering your long-term goal of retirement planning and your interest in retirement accounts, which of the following options would be most beneficial for you?',
 #      'options': ['A. Investing all your savings in a high-risk, high-return retirement account',
