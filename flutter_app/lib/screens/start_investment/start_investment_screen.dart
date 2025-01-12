@@ -10,10 +10,10 @@
 //     );
 //   }
 // }
-// ... existing imports ...
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/business_models.dart';
+import 'package:flutter_app/providers/users_providers.dart';
 import 'package:flutter_app/screens/investment_details/company_details_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:flutter_app/models/business_model.dart'; // Add this model
@@ -143,5 +143,10 @@ class _StartInvestmentScreenState extends ConsumerState<StartInvestmentScreen> {
     );
   }
 
-  Future<void> _processInvestment(BusinessModel opportunity, int lots) async {}
+  Future<void> _processInvestment(BusinessModel opportunity, int lots) async {
+    print(opportunity);
+    print(lots);
+    print(ref.read(userProvider));
+    print(ref.read(userProvider.notifier).state.additionalData);
+  }
 }

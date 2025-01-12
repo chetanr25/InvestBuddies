@@ -69,3 +69,5 @@ node_modules/
 .dataconnect
 flask_server/env/
 flask_server/google-services.json
+
+flask_server/.venv/

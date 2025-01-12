@@ -15,15 +15,16 @@ from cloudinary.utils import cloudinary_url
 
 
 load_dotenv()
-GROCLAKE_API_KEY=os.getenv('GROCLAKE_API_KEY')
-GROCLAKE_ACCOUNT_ID=os.getenv('GROCLAKE_ACCOUNT_ID')
+GROCLAKE_API_KEY = '7647966b7343c29048673252e490f736'
+GROCLAKE_ACCOUNT_ID = 'c0b199d73bdf390c2f4c3150b6ee1574'
+api_key = 'AIzaSyCI8J0vGyBOAo4ibSOCcpE4gdyqP-EDY20'
 model_lake = ModelLake()
 datalake = DataLake()
 vectorlake = VectorLake()
 que_history=[]
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 @app.route('/', methods=['POST'])
 
@@ -47,6 +48,8 @@ def generate_que():
     }
     
     chat_response = ModelLake().chat_complete(payload)
+    print(GROCLAKE_ACCOUNT_ID)
+    print(chat_response)
     chat_answer = chat_response["answer"]
     que_history.append(chat_answer)
     k=convert_to_json(profile,chat_answer)
@@ -64,11 +67,11 @@ def convert_to_json(profile,string):
         print(k)
         return k
     except:
-        generate_que(profile)
+        generate_que()
         
 
 def generate_info(js):
-    api=os.getenv('GEMINI_API_KEY')
+    api='AIzaSyBTFJfDcLKf6cB1FCz3ql4W1z1rS32YCdM'
 
     genai.configure(api_key=api)
 
@@ -78,7 +81,7 @@ def generate_info(js):
     "top_p": 0.95,
     "top_k": 40,
     "max_output_tokens": 8192,
-    "response_mime_type": "text/plain",
+    "response_mime_type": "text/json",
     }
 
     model = genai.GenerativeModel(
@@ -274,8 +277,8 @@ def fin_bot():
 
 
 
-
-app.run(port=6000, debug=True)
+if __name__ == "__main__":
+    app.run(port=6000, debug=True)
 # if __name__ == '__main__':
 
 #     js={'question': 'Considering your long-term goal of retirement planning and your interest in retirement accounts, which of the following options would be most beneficial for you?',
