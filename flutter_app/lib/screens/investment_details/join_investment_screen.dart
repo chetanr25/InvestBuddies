@@ -88,9 +88,6 @@ class _JoinInvestmentScreenState extends ConsumerState<JoinInvestmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Join Investment'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

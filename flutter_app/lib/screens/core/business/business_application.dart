@@ -38,10 +38,6 @@ class _BusinessApplicationScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create business Opportunity'),
-        centerTitle: true,
-      ),
       body: Form(
         key: _formKey,
         child: GestureDetector(

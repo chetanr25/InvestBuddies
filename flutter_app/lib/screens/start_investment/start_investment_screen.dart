@@ -59,9 +59,6 @@ class _StartInvestmentScreenState extends ConsumerState<StartInvestmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Investment Opportunities'),
-      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
