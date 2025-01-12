@@ -52,16 +52,12 @@ def generate_que():
     k=convert_to_json(profile,chat_answer)
     print(k)
     generate_info(k)
-    print("Failed")
     print(k)
     return k
 
 def convert_to_json(profile,string):
-    print("hello")
     try:
-        print(string)
         k=json.loads(string)
-        print(k)
         return k
     except:
         generate_que(profile)
@@ -289,3 +285,4 @@ app.run(port=6000, debug=True)
 #     upload_document()
 #     ans=chat("What is a 401(k) retirement account?")
 #     print(ans)
+
