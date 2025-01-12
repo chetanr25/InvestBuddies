@@ -50,11 +50,11 @@ def generate_que():
     chat_answer = chat_response["answer"]
     que_history.append(chat_answer)
     k=convert_to_json(profile,chat_answer)
-    print(k)
-    generate_info(k)
-    print("Failed")
-    print(k)
     return k
+    # print(k)
+    generate_info(k)
+    # print("Failed")
+    # print(k)
 
 def convert_to_json(profile,string):
     print("hello")
