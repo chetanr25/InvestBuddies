@@ -7,99 +7,116 @@ from groclake.vectorlake import VectorLake
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
-import firebase_admin
-from firebase_admin import credentials, storage
 import cloudinary
 import cloudinary.uploader
 from cloudinary.utils import cloudinary_url
 
-
+# Load environment variables at startup
 load_dotenv()
-GROCLAKE_API_KEY=os.getenv('GROCLAKE_API_KEY')
-GROCLAKE_ACCOUNT_ID=os.getenv('GROCLAKE_ACCOUNT_ID')
+
+# Initialize global variables and API keys
+GROCLAKE_API_KEY = os.getenv('GROCLAKE_API_KEY')
+GROCLAKE_ACCOUNT_ID = os.getenv('GROCLAKE_ACCOUNT_ID')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+
+if not all([GROCLAKE_API_KEY, GROCLAKE_ACCOUNT_ID, GEMINI_API_KEY]):
+    raise ValueError("Missing required environment variables")
+
+# Initialize services
 model_lake = ModelLake()
 datalake = DataLake()
 vectorlake = VectorLake()
-que_history=[]
+que_history = []
 
+# Configure Cloudinary
+cloudinary.config(
+    cloud_name="dsdjgzbc0",
+    api_key="139493769981238",
+    api_secret="SV67yTxWJ1SM1E40SezqDEfst78",
+    secure=True
+)
 
 app = Flask(__name__)
 
-@app.route('/', methods=['POST'])
-
+@app.route('/generate_que', methods=['POST'])  # Changed route name to be more RESTful
 def generate_que():
-
-    global que_history
-    profile= request.json.get("profile")
-    # Expanded payload with multiple prompts
-    payload = {
-        "messages": [
-            {
-                "role": "system",
-                "content": profile
-            },
-            {
-                "role": "user",
-                "content": f"Based on the user's profile and the following question history, generate 1 unique multiple-choice question related to finance that helps the user improve their financial knowledge. The question must not repeat or closely resemble any question in the history. Return the result in JSON format with keys as question, options (as a list), correct option letter, and correct answer.\n\n Question history: {que_history}" ,
-            },
-            
-        ]
-    }
-    
-    chat_response = ModelLake().chat_complete(payload)
-    chat_answer = chat_response["answer"]
-    que_history.append(chat_answer)
-    k=convert_to_json(profile,chat_answer)
-    return k
-    # print(k)
-    generate_info(k)
-    # print("Failed")
-    # print(k)
-
-def convert_to_json(profile,string):
-    print("hello")
     try:
-        print(string)
-        k=json.loads(string)
-        print(k)
-        return k
-    except:
-        generate_que(profile)
+        profile = request.json.get("profile")
+        if not profile:
+            return jsonify({"error": "Profile is required"}), 400
+
+        payload = {
+            "messages": [
+                {"role": "system", "content": profile},
+                {
+                    "role": "user",
+                    "content": f"Based on the user's profile and the following question history, generate 1 unique multiple-choice question related to finance that helps the user improve their financial knowledge. The question must not repeat or closely resemble any question in the history. Return the result in JSON format with keys as question, options (as a list), correct option letter, and correct answer.\n\n Question history: {que_history}"
+                }
+            ]
+        }
+
+        chat_response = model_lake.chat_complete(payload)
+        chat_answer = chat_response.get("answer")
+        if not chat_answer:
+            return jsonify({"error": "Failed to generate question"}), 500
+
+        question_data = convert_to_json(chat_answer)
+        if not question_data:
+            return jsonify({"error": "Failed to parse question data"}), 500
+
+        que_history.append(chat_answer)
+        info = generate_info(question_data)
         
+        return jsonify({
+            "question_data": question_data,
+            # "additional_info": info
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+def convert_to_json(string):
+    try:
+        return json.loads(string)
+    except json.JSONDecodeError as e:
+        print(f"JSON parsing error: {e}")
+        return None
 
 def generate_info(js):
-    api=os.getenv('GEMINI_API_KEY')
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        
+        generation_config = {
+            "temperature": 1,
+            "top_p": 0.95,
+            "top_k": 40,
+            "max_output_tokens": 8192,
+        }
 
-    genai.configure(api_key=api)
+        model = genai.GenerativeModel(
+            model_name="gemini-1.5-flash",
+            generation_config=generation_config,
+        )
 
-    # Create the model
-    generation_config = {
-    "temperature": 1,
-    "top_p": 0.95,
-    "top_k": 40,
-    "max_output_tokens": 8192,
-    "response_mime_type": "text/plain",
-    }
+        prompt = f"Explain in detail about {js['question']} and justify the correct answer {js['correct_answer']}. Also provide 100 lines of info about this topic"
+        
+        chat = model.start_chat()
+        response = chat.send_message(prompt)
+        
+        if not response.text:
+            raise ValueError("Empty response from Gemini")
 
-    model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    generation_config=generation_config,
-    )
+        with open("info_for_rag.txt", "w") as file:
+            file.write(response.text)
+            
+        return response.text
 
-    chat_session = model.start_chat()
-
-    response = chat_session.send_message(f"Explain in detail about {js['question']} and justify the correct answer {js['correct_answer']}. Also provide 100 lines of info about this topic")
-    file_name = "info_for_rag.txt"
-
-
-    with open(file_name, "w") as file:
-        file.write(response.text)
-    print("File created successfully!")
-    return response.text
+    except Exception as e:
+        print(f"Error in generate_info: {e}")
+        raise
 
 datalake_id = None
 vectorlake_id = None
-
 @app.route('/upload', methods=['POST'])
 def upload_document():
     """Upload a document to DataLake and process it for VectorLake."""
@@ -275,8 +292,8 @@ def fin_bot():
 
 
 
-if __name__ == '__main__':
-    app.run()
+app.run(port=5000, debug=True)
+# if _name_ == '_main_':
 
 #     js={'question': 'Considering your long-term goal of retirement planning and your interest in retirement accounts, which of the following options would be most beneficial for you?',
 #      'options': ['A. Investing all your savings in a high-risk, high-return retirement account',
