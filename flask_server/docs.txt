@@ -1,0 +1,12 @@
+/generate_que
+curl -X POST http://127.0.0.1:5000/generate_que -H "Content-Type: application/json" -d "{\"profile\": \"Superman\"}"
+
+/upload
+curl -X POST http://127.0.0.1:5000/upload \
+-H "Content-Type: application/json"
+
+
+/chat
+curl -X POST http://127.0.0.1:5000/chat \
+-H "Content-Type: application/json" \
+-d "{\"query\": \"What is a 401(k) retirement account?\"}"

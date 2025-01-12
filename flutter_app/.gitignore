@@ -64,3 +64,6 @@ firestore.rules
 .firebase/
 ios/Podfile.lock
 .DS_Store
+
+flask_server/.env
+flask_server/.venv/

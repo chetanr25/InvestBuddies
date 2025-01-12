@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/business_models.dart';
 import 'package:flutter_app/models/users_models.dart';
 import 'package:flutter_app/providers/users_providers.dart';
+import 'package:flutter_app/screens/authentication/auth.dart';
 import 'package:flutter_app/screens/chat/chat_screen.dart';
 import 'package:flutter_app/screens/core/business/business_application.dart';
 import 'package:flutter_app/screens/finbot/finbot_screen.dart';
@@ -83,6 +85,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _onItemTapped(int index, {bool isDrawer = false}) {
+    if (index == 8) {
+      FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Auth()),
+      );
+      return;
+    }
     // print('index: $index, _selectedIndex: $_selectedIndex');
     if (_selectedIndex != index && isDrawer) Navigator.pop(context);
     setState(() {
