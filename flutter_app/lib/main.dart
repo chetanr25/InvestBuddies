@@ -8,6 +8,7 @@ import 'package:flutter_app/screens/core/business/business_application.dart';
 import 'package:flutter_app/screens/home_screen.dart';
 import 'package:flutter_app/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_app/screens/legal/terms_and_conditions_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +43,9 @@ class MyApp extends ConsumerWidget {
       title: 'Invest Buddies',
       home: initialScreen,
       theme: theme,
+      routes: {
+        '/terms': (context) => const TermsAndConditionsScreen(),
+      },
     );
   }
 }
