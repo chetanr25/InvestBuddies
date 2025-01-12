@@ -81,7 +81,7 @@ class UserModel {
       email: 'test@example.com',
       additionalData: {},
       displayName: 'John Doe',
-      role: 'sme',
+      role: 'business',
       profileCompleted: false,
       createdAt: DateTime(2024, 1, 1),
       profileImageUrl: '',

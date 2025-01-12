@@ -21,16 +21,34 @@ class Auth extends ConsumerStatefulWidget {
 
 class _AuthState extends ConsumerState<Auth> {
   @override
-  void initState() {
-    super.initState();
-    final user = ref.read(userProvider);
-    if (user != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
-    }
-  }
+  // void initState() {
+  //   super.initState();
+  //   final user = ref.read(userProvider);
+  //   print(user.email);
+  //   // if (user.email != null) {
+  //   //   Navigator.pushReplacement(
+  //   //     context,
+  //   //     MaterialPageRoute(builder: (context) => HomeScreen()),
+  //   //   );
+  //   // }
+  // }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   final user = ref.read(userProvider);
+  //   print('user: $user');
+  //   if (user.email != null) {
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => HomeScreen()),
+  //     );
+  //   } else {
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => const RegistrationScreen()),
+  //     );
+  //   }
+  // }
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
