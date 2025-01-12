@@ -34,7 +34,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         isLoading = false;
       });
     } catch (e) {
-      print(e);
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -105,7 +104,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Your Score: $score/5',
+                'Your Score: $score/${questions.length}',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 24),
@@ -128,11 +127,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     }
 
     final currentQuestion = questions[currentQuestionIndex];
-    final options = currentQuestion['options'] as Map<String, String>;
+    final options = Map<String, String>.from(currentQuestion['options']);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Question ${currentQuestionIndex + 1}/5'),
+        title: Text('Question ${currentQuestionIndex + 1}/${questions.length}'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

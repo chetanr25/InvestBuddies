@@ -36,7 +36,7 @@ cloudinary.config(
     secure=True
 )
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 @app.route('/generate_que', methods=['POST'])  # Changed route name to be more RESTful
 def generate_que():

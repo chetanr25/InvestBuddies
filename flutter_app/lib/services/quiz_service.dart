@@ -18,7 +18,7 @@ class QuizService {
           headers: {'Content-Type': 'application/json'},
           body: json.encode(profile),
         );
-
+        print(response.body);
         if (response.statusCode == 200) {
           final questionData = json.decode(response.body);
           questions.add(questionData);
