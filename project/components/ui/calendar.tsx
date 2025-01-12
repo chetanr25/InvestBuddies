@@ -2,12 +2,12 @@
 
 import * as React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { DayPicker } from 'react-day-picker';
+import { DayPicker, MonthCaptionProps, type DayPickerProps } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+export type CalendarProps = DayPickerProps;
 
 function Calendar({
   className,
@@ -48,14 +48,33 @@ function Calendar({
         day_outside:
           'day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
         day_disabled: 'text-muted-foreground opacity-50',
-        day_range_middle:
-          'aria-selected:bg-accent aria-selected:text-accent-foreground',
         day_hidden: 'invisible',
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+        ...props.components,
+        Caption: ({ calendarMonth, onMonthChange }: MonthCaptionProps) => (
+          <div className="flex items-center">
+            <button
+              onClick={() => onMonthChange(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1))}
+              className={cn(
+                buttonVariants({ variant: 'outline' }),
+                'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute left-1'
+              )}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => onMonthChange(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1))}
+              className={cn(
+                buttonVariants({ variant: 'outline' }),
+                'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute right-1'
+              )}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        )
       }}
       {...props}
     />

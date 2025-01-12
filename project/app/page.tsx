@@ -13,7 +13,6 @@ import {
   Star 
 } from "lucide-react";
 import Link from "next/link";
-import { fetchUserEmail } from "@/api/fetchUserEmail";
 
 // Types based on Firestore data
 interface UserData {
@@ -54,31 +53,6 @@ export default function Dashboard() {
     setUserData(mockUserData);
     setCurrentStreak(mockUserData.streaks.length);
   }, []);
-
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       const email = "chetan@gmail.com"; // Replace with actual user email
-  //       const data = await fetchUserEmail(email);
-        
-  //       if (data) {
-  //         setUserData(data);
-  //         setCurrentStreak(data.streaks?.length || 0);
-  //       }
-  //     } catch (err) {
-  //       console.error('Error fetching user data:', err);
-  //       setError('Failed to load user data');
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   getUserData();
-  // }, []);
-
-  // if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>{error}</div>;
 
   return (
     <div className="min-h-screen bg-background p-8">
