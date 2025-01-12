@@ -1,24 +1,40 @@
 import { db } from '../lib/Firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { UserData } from '../hooks/userData';
 
-export const fetchUserEmail = async (email: string): Promise<UserData | null> => {
+export const fetchAllUsers = async (): Promise<UserData[]> => {
   try {
-    const userRef = doc(db, 'users', email);
-    const userSnap = await getDoc(userRef);
+    const usersRef = collection(db, 'users');
+    const snapshot = await getDocs(usersRef);
     
-    if (!userSnap.exists()) {
-      return null;
-    }
- console.log("hello");
-    return {
-        id: userSnap.id,
-        ...userSnap.data()
-    } as unknown as UserData;
+    const users: UserData[] = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        createdAt: data.createdAt,
+        email: data.email,
+        name: data.name,
+        phoneNumber: data.phoneNumber,
+        profileCompleted: data.profileCompleted,
+        profileImageUrl: data.profileImageUrl,
+        role: data.role,
+        streaks: data.streaks
+      } as UserData;
+    });
+
+    console.log('Fetched users:', users);
+    return users;
   } catch (error) {
-    console.error('Error fetching user:', error);
+    console.error('Error fetching users:', error);
     throw error;
   }
 };
 
-fetchUserEmail('example@example.com');
+// Test the function
+fetchAllUsers().then(users => {
+  users.forEach(user => {
+    console.log(`Document ID: ${user.id}, Name: ${user.name}`);
+  });
+}).catch(error => {
+  console.error('Error:', error);
+});
