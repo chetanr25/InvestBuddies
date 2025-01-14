@@ -251,9 +251,9 @@ def get_url():
     print("Uploading file to cloudinary")
     # Configuration       
     cloudinary.config( 
-        cloud_name = "dsdjgzbc0", 
-        api_key = "139493769981238", 
-        api_secret = "SV67yTxWJ1SM1E40SezqDEfst78", # Click 'View API Keys' above to copy your API secret
+        cloud_name = "dsdjgzbc0",  
+        api_key = os.getenv('CLOUDINARY_API_KEY'),
+        api_secret = os.getenv('CLOUDINARY_SECRERT_KEY'), 
         secure=True
     )
     
