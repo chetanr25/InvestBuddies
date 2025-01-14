@@ -28,14 +28,6 @@ datalake = DataLake()
 vectorlake = VectorLake()
 que_history = []
 
-# Configure Cloudinary
-cloudinary.config(
-    cloud_name="dsdjgzbc0",
-    api_key="139493769981238",
-    api_secret="SV67yTxWJ1SM1E40SezqDEfst78",
-    secure=True
-)
-
 app = Flask(__name__, template_folder='templates')
 
 @app.route('/generate_que', methods=['POST'])  # Changed route name to be more RESTful
