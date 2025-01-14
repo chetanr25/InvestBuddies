@@ -1,7 +1,3 @@
-**InvestBuddies**: 
-
----
-
 # 🌟 **InvestBuddies**  
 ### ~ Save Together, Grow Together 🙂  
 
