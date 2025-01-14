@@ -90,8 +90,8 @@ By combining **practical learning**, **gamified education**, and a **user-friend
 ---
 
 ### 🛠️ **Tech Stack**  
-- **Frontend**: [/Flutter/Next.js/]  
-- **Backend**: [/Firebase/etc.]  
+- **Frontend**: Flutter, Next.js
+- **Backend**: Firebase, Python, Dart
 
 ---
 
