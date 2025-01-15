@@ -11,10 +11,8 @@ import cloudinary
 import cloudinary.uploader
 from cloudinary.utils import cloudinary_url
 
-# Load environment variables at startup
 load_dotenv()
 
-# Initialize global variables and API keys
 GROCLAKE_API_KEY = os.getenv('GROCLAKE_API_KEY')
 GROCLAKE_ACCOUNT_ID = os.getenv('GROCLAKE_ACCOUNT_ID')
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
@@ -22,23 +20,14 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 if not all([GROCLAKE_API_KEY, GROCLAKE_ACCOUNT_ID, GEMINI_API_KEY]):
     raise ValueError("Missing required environment variables")
 
-# Initialize services
 model_lake = ModelLake()
 datalake = DataLake()
 vectorlake = VectorLake()
 que_history = []
 
-# Configure Cloudinary
-cloudinary.config(
-    cloud_name="dsdjgzbc0",
-    api_key="139493769981238",
-    api_secret="SV67yTxWJ1SM1E40SezqDEfst78",
-    secure=True
-)
-
 app = Flask(__name__, template_folder='templates')
 
-@app.route('/generate_que', methods=['POST'])  # Changed route name to be more RESTful
+@app.route('/generate_que', methods=['POST']) 
 def generate_que():
     try:
         profile = request.json.get("profile")
@@ -123,7 +112,6 @@ def upload_document():
     global datalake_id, vectorlake_id
 
     try:
-        # Step 1: Create DataLake and VectorLake if not already created
         if not datalake_id:
             datalake_create = datalake.create()
             if "datalake_id" in datalake_create:
@@ -142,16 +130,14 @@ def upload_document():
                 print(f"Error creating VectorLake: {vector_create}")
                 return {"error": "Failed to create VectorLake"}
 
-        # Step 2: Get document URL from request
         document_url = "content/info_for_rag.txt"
         if not document_url:
             return {"error": "Document URL is required."}
         
         url=get_url()
-        # Step 3: Push the document to DataLake
         payload_push = {
-        "datalake_id": datalake_id,  # Specify the target DataLake
-        "document_type": "url",    # Document type can be 'url', 'text', etc.
+        "datalake_id": datalake_id,
+        "document_type": "url",
         "document_data": url
         
     }
@@ -168,7 +154,6 @@ def upload_document():
 
         print(f"Document pushed successfully with ID: {document_id}")
 
-        # Step 4: Fetch and process the document
         payload_fetch = {
             "document_id": document_id,
             "datalake_id": datalake_id,
@@ -179,7 +164,6 @@ def upload_document():
         document_chunks = data_fetch.get("document_data", [])
         print(f"Document fetched successfully. Total chunks: {len(document_chunks)}")
 
-        # Step 5: Push chunks to VectorLake
         for chunk in document_chunks:
             vector_doc = vectorlake.generate(chunk)
             vector_chunk = vector_doc.get("vector")
@@ -199,15 +183,12 @@ def upload_document():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    """Chat endpoint for processing user queries."""
     query= request.json.get("query")
     try:
        
-        # Step 2: Generate vector for the user query
         vector_search_data = vectorlake.generate(query)
         search_vector = vector_search_data.get("vector")
 
-        # Step 3: Search VectorLake
         search_payload = {
             "vector": search_vector,
             "vectorlake_id": vectorlake_id,
@@ -215,15 +196,12 @@ def chat():
         }
         search_response = vectorlake.search(search_payload)
         
-        # Print the search response for debugging
         print("Search Response:", search_response)
 
         search_results = search_response.get("results", [])
         
-        # Step 4: Construct enriched context
         enriched_context = " ".join([result.get("vector_document", "") for result in search_results])
 
-        # Step 5: Query ModelLake with enriched context
         payload = {
             "messages": [
                 {"role": "system", 
@@ -249,15 +227,13 @@ def chat():
 
 def get_url():
     print("Uploading file to cloudinary")
-    # Configuration       
     cloudinary.config( 
-        cloud_name = "dsdjgzbc0", 
-        api_key = "139493769981238", 
-        api_secret = "SV67yTxWJ1SM1E40SezqDEfst78", # Click 'View API Keys' above to copy your API secret
+        cloud_name = "dsdjgzbc0",  
+        api_key = os.getenv('CLOUDINARY_API_KEY'),
+        api_secret = os.getenv('CLOUDINARY_SECRERT_KEY'), 
         secure=True
     )
     
-    # Upload an image
     upload_result = cloudinary.uploader.upload("info_for_rag.txt",resource_type = "raw")
     file_url=upload_result.get("url")
 
@@ -284,15 +260,11 @@ def fin_bot():
     }
     chat_response = ModelLake().chat_complete(payload)
 
-        # Extract and print the response
     chat_answer = chat_response["answer"]
     return chat_answer
 
 
-
-
-
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run()
 
 #     js={'question': 'Considering your long-term goal of retirement planning and your interest in retirement accounts, which of the following options would be most beneficial for you?',

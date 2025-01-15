@@ -5,9 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/users_providers.dart';
 
 class FinbotServer {
-  // static const String baseUrl = 'http://127.0.0.1:7000/generate_question';
-
-  static Future<Map<String, dynamic>> generateQuestion(UserModel user) async {
+  static Future<Map<String, dynamic>> generateQuestion(user) async {
     try {
       final userData = {
         'userId': user.userId,
@@ -17,13 +15,13 @@ class FinbotServer {
       print(json.encode(userData));
       print('Sending data to server');
       final response = await h.post(
-        Uri.parse("http://127.0.0.1:6000/generate_question"),
+        Uri.parse("https://state-nightowls.onrender.com"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: json.encode(userData),
       );
-      print(response);
+      print(response.body);
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       }

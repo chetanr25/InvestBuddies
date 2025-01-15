@@ -1,36 +1,21 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import '../mcqs.dart';
 
 class QuizService {
-  String baseUrl =
-      'https://state-nightowls.onrender.com/'; // Replace with your endpoint
-
   Future<List<Map<String, dynamic>>> fetchQuizQuestions(profile) async {
-    List<Map<String, dynamic>> questions = [];
+    await Future.delayed(const Duration(milliseconds: 500));
 
-    try {
-      print(profile);
-      // Fetch 5 questions one by one
-      for (int i = 0; i < 1; i++) {
-        await Future.delayed(const Duration(seconds: 1));
-        final response = await http.post(
-          Uri.parse(baseUrl),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(profile),
-        );
-
-        if (response.statusCode == 200) {
-          final questionData = json.decode(response.body);
-          questions.add(questionData);
-        } else {
-          print(response.body);
-          throw Exception('Failed to load question ${i + 1}');
-        }
-      }
-      print(questions);
-      return questions;
-    } catch (e) {
-      throw Exception('Error fetching quiz questions: $e');
-    }
+    return data.map((question) {
+      return {
+        'question': question['question'],
+        'correct_option_letter': question['correct_option_letter'],
+        'correct_answer': question['correct_answer'],
+        'options': Map.fromIterables(
+          ['A', 'B', 'C', 'D'],
+          (question['options'] as List<String>)
+              .map((opt) => opt.substring(3))
+              .toList(),
+        ),
+      };
+    }).toList();
   }
 }
