@@ -105,7 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              const DrawerHeader(
+              DrawerHeader(
                 decoration: BoxDecoration(
                   color: Colors.blue,
                 ),
@@ -124,6 +124,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
+                      ),
+                    ),
+                    Text(
+                      ref.read(userProvider).email ?? 'User ID',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
                       ),
                     ),
                   ],

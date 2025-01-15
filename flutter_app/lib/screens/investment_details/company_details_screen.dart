@@ -23,7 +23,10 @@ class CompanyDetailsScreen extends ConsumerWidget {
             children: [
               Text(
                 business.description,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
               Card(
@@ -32,10 +35,23 @@ class CompanyDetailsScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Industry: ${business.industry}'),
-                      Text('Price per Lot: ₹${business.pricePerLot}'),
-                      Text('Available Lots: ${business.numberOfLots}'),
-                      Text('Total Goal: ₹${business.totalFundingGoal}'),
+                      Text('Industry: ${business.industry}',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Business Plan: ${business.businessPlan}',
+                      ),
+                      const SizedBox(height: 16),
+                      Text('Price per Lot: ₹${business.pricePerLot}',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text('Available Lots: ${business.numberOfLots}',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text('Total Goal: ₹${business.totalFundingGoal}',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -60,6 +76,10 @@ class CompanyDetailsScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -70,7 +90,7 @@ class CompanyDetailsScreen extends ConsumerWidget {
                       ),
                     );
                   },
-                  child: const Text('Buy a lot with buddies'),
+                  child: const Text('Buy with buddies'),
                 ),
               ),
               const SizedBox(width: 16),
