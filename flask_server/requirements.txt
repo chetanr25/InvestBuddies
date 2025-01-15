@@ -1,5 +1,7 @@
 Flask==2.3.2
-groclake==1.0.0
+groclake==0.1.14
 google-generativeai==0.3.1
 firebase-admin==6.0.0
 python-dotenv==1.0.0
+gunicorn==23.0.0
+cloudinary==1.42.1
