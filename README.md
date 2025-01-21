@@ -1,5 +1,5 @@
 # 🌟 **InvestBuddies**  
-### ~ Save Together, Grow Together 🙂  
+### Save Together, Grow Together 🚀📈
 
 Welcome to **InvestBuddies**, a beginner-friendly **FinTech platform** that revolutionizes the way people invest. By fostering **collaboration, education**, and **growth**, we aim to make investing **accessible** and **fun** for everyone.  
 
