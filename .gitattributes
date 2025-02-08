@@ -3,3 +3,5 @@
 *.js linguist-language
 *.ts linguist-language
 *.cpp linguist-language
+*.h linguist-language
+*.txt linguist-language
