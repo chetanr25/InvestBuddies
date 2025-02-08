@@ -1,3 +1,4 @@
-TypeScript
-C++
-CMake
+*.tsx linguist-vendored
+*.css linguist-vendored
+*.js linguist-vendored
+*.ts
