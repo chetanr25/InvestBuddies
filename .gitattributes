@@ -1,4 +1,4 @@
-*.tsx linguist-vendored
-*.css linguist-vendored
-*.js linguist-vendored
-*.ts
+*.tsx linguist-language
+*.css linguist-language
+*.js linguist-language
+*.ts linguist-language
