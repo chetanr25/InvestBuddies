@@ -1,9 +1,8 @@
 import os
 from flask import Flask, request, jsonify
-from groclake.cataloglake import CatalogLake
-from groclake.modellake import ModelLake
-from groclake.datalake import DataLake
-from groclake.vectorlake import VectorLake
+from groclake.modellake import Modellake
+from groclake.datalake import Datalake
+from groclake.vectorlake import Vectorlake
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -20,9 +19,9 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 if not all([GROCLAKE_API_KEY, GROCLAKE_ACCOUNT_ID, GEMINI_API_KEY]):
     raise ValueError("Missing required environment variables")
 
-model_lake = ModelLake()
-datalake = DataLake()
-vectorlake = VectorLake()
+model_lake = Modellake()
+datalake = Datalake()
+vectorlake = Vectorlake()
 que_history = []
 
 app = Flask(__name__, template_folder='templates')
@@ -30,7 +29,9 @@ app = Flask(__name__, template_folder='templates')
 @app.route('/generate_que', methods=['POST']) 
 def generate_que():
     try:
-        profile = request.json.get("profile")
+        p = request.json.get("profile")
+        profile = str(p)
+        print("profile",profile)
         if not profile:
             return jsonify({"error": "Profile is required"}), 400
 
@@ -43,8 +44,10 @@ def generate_que():
                 }
             ]
         }
-
-        chat_response = model_lake.chat_complete(payload)
+        # payload = {'messages': [{'role': 'system', 'content': {'ageGroup': '18-25', 'employmentStatus': 'Student', 'incomeRange': 'Less than ₹25,000', 'riskLevel': 'Low Risk - Savings accounts, bonds', 'industries': [], 'shortTermGoals': [], 'investmentInterests': [], 'challenges': []}}, {'role': 'user', 'content': "Based on the user's profile and the following question history, generate 1 unique multiple-choice question related to finance that helps the user improve their financial knowledge. The question must not repeat or closely resemble any question in the history. Return the result in JSON format with keys as question, options (as a list), correct option letter, and correct answer.\n\n Question history: []"}]}
+        
+        chat_response = Modellake().chat_complete(payload)
+        print("chat_response",chat_response)
         chat_answer = chat_response.get("answer")
         if not chat_answer:
             return jsonify({"error": "Failed to generate question"}), 500
@@ -91,7 +94,7 @@ def generate_info(js):
         
         chat = model.start_chat()
         response = chat.send_message(prompt)
-        
+        print("response",response)
         if not response.text:
             raise ValueError("Empty response from Gemini")
 
@@ -258,8 +261,10 @@ def fin_bot():
             
         ]
     }
+    print("payload",payload)
     chat_response = ModelLake().chat_complete(payload)
-
+    print("chat_response",chat_response)
+    
     chat_answer = chat_response["answer"]
     return chat_answer
 
